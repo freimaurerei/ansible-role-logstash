@@ -1,0 +1,14 @@
+input {
+  udp {
+    type => "{% if item.value.input.type is defined %}{{ item.value.input.type }}{% else %}{{ logstash_default_type }}{% endif %}"
+    port => {% if item.value.input.port is defined %}{{ item.value.input.port }}{% else %}{{ logstash_udp_port }}{% endif %}
+    codec => "{% if item.value.input.codec is defined %}{{ item.value.input.codec }}{% else %}{{ logstash_default_codec }}{% endif %}"
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => {% if item.value.output.es_hosts is defined %}{{ item.value.output.es_hosts | to_json }}{% else %}{{ logstash_elasticsearch_hosts | to_json }}{% endif %}
+    index => "{{ item.value.output.index }}"
+  }
+}
